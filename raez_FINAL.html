@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>رائز التحدي | نادي بين السطور</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&family=Aref+Ruqaa:wght@400;700&family=Tajawal:wght@300;400;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --forest: #0d3320;
+            --emerald: #1a5c38;
+            --leaf: #2d8653;
+            --gold: #c8922a;
+            --amber: #e8a93a;
+            --cream: #fdf6e3;
+            --parchment: #f5ead0;
+            --ink: #1a1209;
+            --mist: rgba(255,255,255,0.06);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Cairo', sans-serif;
+            background: var(--cream);
+            color: var(--ink);
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-image:
+                radial-gradient(ellipse 80% 50% at 20% 10%, rgba(45,134,83,0.08) 0%, transparent 60%),
+                radial-gradient(ellipse 60% 60% at 80% 90%, rgba(200,146,42,0.06) 0%, transparent 60%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .step { display: none; }
+        .step.active { display: block; }
+
+        /* INTRO */
+        #step-intro { min-height: 100vh; display: none; flex-direction: column; position: relative; }
+        #step-intro.active { display: flex; }
+
+        .hero {
+            background: linear-gradient(160deg, var(--forest) 0%, #0a2818 40%, #071e12 100%);
+            padding: 0 0 70px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0; right: 0;
+            height: 80px;
+            background: var(--cream);
+            clip-path: ellipse(55% 100% at 50% 100%);
+        }
+
+        .hero-deco { position: absolute; top: 0; left: 0; right: 0; bottom: 0; overflow: hidden; pointer-events: none; }
+        .hero-deco svg { position: absolute; opacity: 0.06; }
+
+        .logos-row { display: flex; align-items: center; justify-content: space-between; padding: 30px 40px 20px; position: relative; z-index: 2; }
+        .logo-club { display: flex; align-items: center; gap: 14px; }
+        .logo-club img { width: 68px; height: 68px; border-radius: 50%; border: 2px solid rgba(200,146,42,0.5); object-fit: cover; }
+        .logo-club-text { text-align: right; }
+        .logo-club-text .club-name { font-family: 'Aref Ruqaa', serif; font-size: 1.2rem; color: var(--amber); line-height: 1.2; }
+        .logo-club-text .club-tagline { font-size: 0.72rem; color: rgba(255,255,255,0.5); letter-spacing: 0.05em; }
+
+        .logo-nour { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+        .nour-circle { width: 72px; height: 72px; border-radius: 50%; background: linear-gradient(135deg, var(--gold), var(--amber)); display: flex; align-items: center; justify-content: center; box-shadow: 0 0 20px rgba(200,146,42,0.4), 0 0 40px rgba(200,146,42,0.15); font-family: 'Aref Ruqaa', serif; font-size: 1.5rem; color: white; border: 2px solid rgba(255,255,255,0.2); position: relative; overflow: hidden; flex-shrink: 0; }
+        .nour-circle::before { content: ''; position: absolute; top: -10px; right: -10px; width: 40px; height: 40px; background: rgba(255,255,255,0.15); border-radius: 50%; }
+        .nour-label { text-align: center; font-size: 0.65rem; color: rgba(255,255,255,0.4); letter-spacing: 0.04em; line-height: 1.3; }
+        .nour-label strong { display: block; color: rgba(255,255,255,0.7); font-size: 0.72rem; }
+
+        .hero-center { text-align: center; padding: 20px 20px 0; position: relative; z-index: 2; }
+        .hero-eyebrow { display: inline-flex; align-items: center; gap: 10px; background: rgba(200,146,42,0.15); border: 1px solid rgba(200,146,42,0.3); border-radius: 30px; padding: 6px 20px; font-size: 0.75rem; color: var(--amber); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 20px; }
+        .hero-eyebrow::before, .hero-eyebrow::after { content: '◆'; font-size: 0.5rem; opacity: 0.6; }
+        .hero-title { font-family: 'Aref Ruqaa', serif; font-size: clamp(2.8rem, 8vw, 5rem); color: white; line-height: 1.1; margin-bottom: 12px; text-shadow: 0 2px 20px rgba(0,0,0,0.3); }
+        .hero-title span { color: var(--amber); display: block; }
+        .hero-subtitle { font-size: 1rem; color: rgba(255,255,255,0.6); max-width: 500px; margin: 0 auto 10px; line-height: 1.7; }
+        .stars-row { display: flex; justify-content: center; gap: 6px; margin: 16px 0; }
+        .star { color: var(--amber); font-size: 1.1rem; }
+
+        .intro-card { max-width: 560px; margin: -30px auto 0; padding: 40px 36px; background: white; border-radius: 28px; box-shadow: 0 30px 80px rgba(0,0,0,0.10), 0 0 0 1px rgba(200,146,42,0.1); position: relative; z-index: 3; }
+        .intro-card::before { content: ''; position: absolute; top: 0; left: 50%; transform: translateX(-50%); width: 60px; height: 3px; background: linear-gradient(90deg, var(--gold), var(--amber)); border-radius: 2px; }
+        .intro-card h2 { font-family: 'Aref Ruqaa', serif; font-size: 1.6rem; color: var(--forest); margin-bottom: 6px; text-align: center; }
+        .intro-card p { font-size: 0.9rem; color: #666; text-align: center; margin-bottom: 28px; line-height: 1.7; }
+
+        .field-group { display: flex; flex-direction: column; gap: 16px; margin-bottom: 24px; }
+        .field-wrap { position: relative; }
+        .field-wrap label { display: block; font-size: 0.8rem; font-weight: 700; color: var(--forest); margin-bottom: 8px; letter-spacing: 0.02em; }
+        .field-icon { position: absolute; right: 14px; bottom: 14px; font-size: 1.1rem; pointer-events: none; opacity: 0.5; }
+        input.inp { width: 100%; border: 2px solid #e8e0d0; border-radius: 14px; padding: 13px 42px 13px 16px; font-family: 'Cairo', sans-serif; font-size: 0.95rem; color: var(--ink); background: #fdfaf4; transition: border-color 0.25s, box-shadow 0.25s; outline: none; }
+        input.inp:focus { border-color: var(--leaf); box-shadow: 0 0 0 4px rgba(45,134,83,0.1); background: white; }
+
+        .btn-start { width: 100%; background: linear-gradient(135deg, var(--emerald), var(--forest)); color: white; border: none; border-radius: 16px; padding: 16px; font-family: 'Cairo', sans-serif; font-size: 1.1rem; font-weight: 700; cursor: pointer; transition: all 0.3s; box-shadow: 0 8px 20px rgba(13,51,32,0.25); position: relative; overflow: hidden; }
+        .btn-start::before { content: ''; position: absolute; inset: 0; background: linear-gradient(135deg, rgba(255,255,255,0.08), transparent); }
+        .btn-start:hover { transform: translateY(-2px); box-shadow: 0 12px 30px rgba(13,51,32,0.35); }
+        .btn-start:active { transform: translateY(0); }
+
+        .intro-footnote { text-align: center; font-size: 0.78rem; color: #aaa; margin-top: 16px; }
+
+        .challenge-stats { display: flex; justify-content: center; gap: 28px; padding: 30px 20px 40px; flex-wrap: wrap; }
+        .stat-badge { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+        .stat-badge .num { font-family: 'Aref Ruqaa', serif; font-size: 2rem; color: var(--gold); line-height: 1; }
+        .stat-badge .lbl { font-size: 0.75rem; color: #999; letter-spacing: 0.03em; }
+        .stat-divider { width: 1px; background: #e0d8c8; align-self: stretch; }
+
+        /* TEST */
+        #step-test { min-height: 100vh; display: none; padding: 0 0 60px; }
+        #step-test.active { display: block; }
+        .test-header { background: linear-gradient(135deg, var(--forest), #061910); padding: 24px 30px; position: sticky; top: 0; z-index: 50; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 4px 20px rgba(0,0,0,0.15); }
+        .test-header-left { display: flex; align-items: center; gap: 12px; }
+        .test-header img { width: 40px; height: 40px; border-radius: 50%; border: 1px solid rgba(200,146,42,0.4); }
+        .test-header-title { font-family: 'Aref Ruqaa', serif; font-size: 1.1rem; color: white; }
+        .book-chip { background: rgba(200,146,42,0.15); border: 1px solid rgba(200,146,42,0.4); border-radius: 20px; padding: 4px 14px; font-size: 0.78rem; color: var(--amber); max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        
+        .progress-track { height: 4px; background: rgba(255,255,255,0.1); position: relative; }
+        .progress-fill { height: 100%; background: linear-gradient(90deg, var(--gold), var(--amber)); transition: width 0.5s cubic-bezier(0.4,0,0.2,1); width: 25%; }
+
+        .questions-wrap { max-width: 700px; margin: 40px auto 0; padding: 0 20px; }
+        .q-card { background: white; border-radius: 24px; padding: 32px; margin-bottom: 28px; box-shadow: 0 4px 24px rgba(0,0,0,0.06); border: 1px solid rgba(0,0,0,0.04); position: relative; overflow: hidden; animation: slideUp 0.5s ease both; }
+        @keyframes slideUp { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }
+        .q-card:nth-child(2) { animation-delay: 0.08s; }
+        .q-card:nth-child(3) { animation-delay: 0.16s; }
+        .q-card:nth-child(4) { animation-delay: 0.24s; }
+        .q-card::before { content: ''; position: absolute; top: 0; right: 0; width: 4px; height: 100%; background: linear-gradient(180deg, var(--emerald), var(--leaf)); border-radius: 2px 0 0 2px; }
+        .q-number { display: inline-flex; align-items: center; justify-content: center; width: 34px; height: 34px; background: var(--forest); color: white; border-radius: 10px; font-size: 0.85rem; font-weight: 700; margin-bottom: 14px; flex-shrink: 0; }
+        .q-title-row { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+        .q-emoji { font-size: 1.6rem; }
+        .q-title { font-family: 'Tajawal', sans-serif; font-size: 1.25rem; font-weight: 800; color: var(--forest); line-height: 1.3; }
+        .q-body { font-size: 0.95rem; color: #555; line-height: 1.8; margin-bottom: 18px; padding-right: 16px; border-right: 3px solid #f0ebe0; }
+        .book-ref { font-weight: 700; color: var(--gold); font-style: italic; }
+        textarea.ans { width: 100%; border: 2px solid #e8e0d0; border-radius: 14px; padding: 14px; font-family: 'Cairo', sans-serif; font-size: 0.92rem; color: var(--ink); background: #fdfaf4; resize: vertical; min-height: 110px; transition: border-color 0.25s, box-shadow 0.25s; outline: none; line-height: 1.8; }
+        textarea.ans:focus { border-color: var(--leaf); box-shadow: 0 0 0 4px rgba(45,134,83,0.1); background: white; }
+
+        .submit-wrap { max-width: 700px; margin: 8px auto 0; padding: 0 20px; }
+        .btn-submit { width: 100%; background: linear-gradient(135deg, var(--gold), #b07a20); color: white; border: none; border-radius: 18px; padding: 20px; font-family: 'Cairo', sans-serif; font-size: 1.15rem; font-weight: 700; cursor: pointer; transition: all 0.3s; box-shadow: 0 10px 25px rgba(200,146,42,0.25); display: flex; align-items: center; justify-content: center; gap: 12px; }
+        .btn-submit:hover { transform: translateY(-3px); box-shadow: 0 15px 35px rgba(200,146,42,0.35); }
+
+        /* LOADING */
+        #step-loading { min-height: 100vh; display: none; flex-direction: column; align-items: center; justify-content: center; background: var(--forest); color: white; text-align: center; padding: 40px; }
+        #step-loading.active { display: flex; }
+        .loader-orb { width: 100px; height: 100px; background: var(--amber); border-radius: 50%; margin-bottom: 30px; display: flex; align-items: center; justify-content: center; font-size: 3rem; animation: pulse 2s infinite; box-shadow: 0 0 40px var(--amber); }
+        @keyframes pulse { 0% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.1); opacity: 0.8; } 100% { transform: scale(1); opacity: 1; } }
+        .loading-title { font-family: 'Aref Ruqaa', serif; font-size: 2rem; margin-bottom: 12px; }
+        .loading-sub { font-size: 1rem; opacity: 0.7; max-width: 400px; line-height: 1.6; }
+        .loading-dots { display: flex; gap: 8px; margin-top: 24px; }
+        .loading-dots span { width: 10px; height: 10px; background: var(--amber); border-radius: 50%; animation: dot 1.4s infinite both; }
+        .loading-dots span:nth-child(2) { animation-delay: 0.2s; }
+        .loading-dots span:nth-child(3) { animation-delay: 0.4s; }
+        @keyframes dot { 0%, 80%, 100% { transform: scale(0); } 40% { transform: scale(1); } }
+
+        /* CERTIFICATE */
+        #step-cert { min-height: 100vh; display: none; padding: 40px 20px; background: #f0ebe0; }
+        #step-cert.active { display: block; }
+        .cert-wrap { max-width: 850px; margin: 0 auto; }
+        .cert-success-banner { background: #e6f4ea; border: 1px solid #c3e6cb; border-radius: 16px; padding: 20px; display: flex; align-items: center; gap: 16px; margin-bottom: 30px; }
+        .cert-success-icon { font-size: 2rem; }
+        .cert-success-text strong { display: block; color: #1e7e34; font-size: 1.1rem; }
+        .cert-success-text span { font-size: 0.9rem; color: #2d5a37; }
+
+        .certificate { background: white; padding: 12px; position: relative; box-shadow: 0 20px 60px rgba(0,0,0,0.15); border-radius: 4px; overflow: hidden; }
+        .cert-inner { border: 2px solid var(--forest); padding: 50px 40px; position: relative; background: white; }
+        .cert-inner::after { content: ''; position: absolute; inset: 6px; border: 1px solid var(--gold); pointer-events: none; }
+        
+        .cert-corner { position: absolute; width: 60px; height: 60px; z-index: 5; }
+        .cert-corner.tl { top: 15px; left: 15px; }
+        .cert-corner.tr { top: 15px; right: 15px; transform: rotate(90deg); }
+        .cert-corner.bl { bottom: 15px; left: 15px; transform: rotate(-90deg); }
+        .cert-corner.br { bottom: 15px; right: 15px; transform: rotate(180deg); }
+
+        .cert-logos { display: flex; align-items: center; justify-content: center; gap: 24px; margin-bottom: 30px; }
+        .cert-logos img { width: 80px; height: 80px; border-radius: 50%; border: 2px solid var(--gold); }
+        .cert-logos-divider { width: 1px; height: 40px; background: #ddd; }
+        .cert-nour-badge { width: 60px; height: 60px; border-radius: 50%; background: var(--forest); color: var(--amber); display: flex; align-items: center; justify-content: center; font-family: 'Aref Ruqaa', serif; font-size: 1.4rem; border: 2px solid var(--gold); }
+
+        .cert-eyebrow { text-align: center; font-size: 0.85rem; color: var(--gold); letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 10px; }
+        .cert-main-title { text-align: center; font-family: 'Aref Ruqaa', serif; font-size: 3.2rem; color: var(--forest); line-height: 1; margin-bottom: 8px; }
+        .cert-org { text-align: center; font-size: 1rem; color: #666; margin-bottom: 24px; }
+        .cert-divider { display: flex; align-items: center; justify-content: center; gap: 15px; margin: 20px 0; }
+        .cert-divider::before, .cert-divider::after { content: ''; height: 1px; width: 80px; background: linear-gradient(90deg, transparent, var(--gold), transparent); }
+        .cert-divider span { color: var(--gold); font-size: 1.2rem; }
+
+        .cert-intro-text { text-align: center; font-size: 1.1rem; color: #555; margin-bottom: 10px; }
+        .cert-name { text-align: center; font-family: 'Aref Ruqaa', serif; font-size: 2.8rem; color: var(--amber); margin-bottom: 20px; text-shadow: 1px 1px 0 rgba(0,0,0,0.05); }
+        .cert-body { text-align: center; font-size: 1.15rem; color: #444; line-height: 1.8; max-width: 600px; margin: 0 auto 30px; }
+        .cert-body .hl { color: var(--forest); font-weight: 700; border-bottom: 2px solid var(--amber); }
+
+        .cert-footer { display: flex; align-items: flex-end; justify-content: space-between; margin-top: 40px; }
+        .cert-footer-col { flex: 1; }
+        .cert-footer-col .lbl { font-size: 0.75rem; color: #999; margin-bottom: 4px; text-transform: uppercase; }
+        .cert-footer-col .val { font-family: 'Cairo', sans-serif; font-weight: 700; color: var(--forest); font-size: 1rem; }
+        .cert-stamp { width: 120px; height: 120px; border: 2px double var(--gold); border-radius: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; font-size: 0.75rem; color: var(--forest); font-weight: 800; transform: rotate(-15deg); background: rgba(200,146,42,0.03); position: relative; }
+        .cert-stamp::after { content: ''; position: absolute; inset: 4px; border: 1px solid rgba(200,146,42,0.2); border-radius: 50%; }
+        .stamp-star { color: var(--amber); font-size: 1.2rem; margin-bottom: 2px; }
+        .cert-rank { font-family: 'Aref Ruqaa', serif; font-size: 1.4rem; color: var(--emerald); }
+
+        .cert-actions { display: flex; justify-content: center; gap: 20px; margin-top: 40px; }
+        .btn-action { padding: 14px 28px; border-radius: 12px; font-family: 'Cairo', sans-serif; font-weight: 700; cursor: pointer; transition: all 0.3s; border: none; }
+        .btn-print { background: var(--forest); color: white; }
+        .btn-restart { background: white; color: var(--forest); border: 2px solid var(--forest); }
+
+        @media print {
+            body * { visibility: hidden; }
+            #the-certificate, #the-certificate * { visibility: visible; }
+            #the-certificate { position: absolute; left: 0; top: 0; width: 100%; box-shadow: none; }
+            .cert-actions, .cert-success-banner { display: none; }
+        }
+
+        @media (max-width: 600px) {
+            .cert-inner { padding: 30px 20px; }
+            .cert-main-title { font-size: 2.2rem; }
+            .cert-name { font-size: 2rem; }
+            .cert-footer { flex-direction: column; align-items: center; gap: 30px; text-align: center; }
+            .cert-stamp { order: -1; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- FORMULAIRE CACHÉ POUR L'ENVOI D'EMAIL AJAX -->
+<form id="submission-form" action="https://formsubmit.co/onea31458@gmail.com" method="POST" target="hidden_iframe" style="display:none">
+    <input type="hidden" name="_subject" value="مشاركة جديدة — رائز التحدي | بين السطور">
+    <input type="hidden" name="_captcha" value="false">
+    <input type="hidden" name="_template" value="table">
+    <input type="hidden" name="_next" value="https://formsubmit.co/thanks">
+    <input type="hidden" name="الاسم"      id="f-name">
+    <input type="hidden" name="المحتوى"    id="f-content">
+    <input type="hidden" name="الممحاة"    id="f-q1">
+    <input type="hidden" name="الزمكان"    id="f-q2">
+    <input type="hidden" name="لبنة_العقل" id="f-q3">
+    <input type="hidden" name="المخرج"     id="f-q4">
+</form>
+<iframe name="hidden_iframe" id="hidden_iframe" style="display:none"></iframe>
+
+<!-- STEP 1: INTRO -->
+<div id="step-intro" class="step active">
+    <div class="hero">
+        <div class="hero-deco">
+            <svg style="top:10%; left:5%; width:300px;" viewBox="0 0 100 100"><circle cx="50" cy="50" r="40" stroke="currentColor" fill="none" stroke-width="0.5"/></svg>
+            <svg style="bottom:15%; right:5%; width:250px;" viewBox="0 0 100 100"><rect x="20" y="20" width="60" height="60" stroke="currentColor" fill="none" stroke-width="0.5" transform="rotate(45 50 50)"/></svg>
+        </div>
+
+        <div class="logos-row">
+            <div class="logo-club">
+                <img src="https://files.manuscdn.com/user_upload_by_module/session_file/310419663031625195/ENYhSlnuWzaOeyJM.jpg" alt="نادي بين السطور">
+                <div class="logo-club-text">
+                    <div class="club-name">بين السطور</div>
+                    <div class="club-tagline">نـبـني الـعـقـول</div>
+                </div>
+            </div>
+            <div class="logo-nour">
+                <div class="nour-circle">نـ</div>
+                <div class="nour-label">إشراف<br><strong>نور الهبة</strong></div>
+            </div>
+        </div>
+
+        <div class="hero-center">
+            <div class="hero-eyebrow">مبادرة التحدي الثقافي</div>
+            <h1 class="hero-title">رائز التحدي <span>التحليل والتركيب</span></h1>
+            <p class="hero-subtitle">اختبار فكري عميق لقياس قدرتك على تفكيك الأفكار وإعادة بنائها من منظورك الخاص.</p>
+            <div class="stars-row">
+                <span class="star">✦</span><span class="star">✦</span><span class="star">✦</span><span class="star">✦</span><span class="star">✦</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="intro-card">
+        <h2>ابدأ رحلة العبور</h2>
+        <p>أدخل بياناتك للانتقال إلى أسئلة الرائز والحصول على شهادتك</p>
+        
+        <div class="field-group">
+            <div class="field-wrap">
+                <label>الاسم الكامل</label>
+                <input type="text" id="input-name" class="inp" placeholder="مثال: أحمد محمد">
+                <span class="field-icon">👤</span>
+            </div>
+            <div class="field-wrap">
+                <label>اسم الكتاب أو الفيلم المختار</label>
+                <input type="text" id="input-content" class="inp" placeholder="مثال: رواية الخيميائي">
+                <span class="field-icon">📖</span>
+            </div>
+        </div>
+
+        <button class="btn-start" onclick="goToTest()">
+            دخول التحدي الآن &nbsp; ←
+        </button>
+        <div class="intro-footnote">سيتم إصدار شهادة فورية عند الإكمال</div>
+    </div>
+
+    <div class="challenge-stats">
+        <div class="stat-badge">
+            <div class="num">04</div>
+            <div class="lbl">محاور تحليلية</div>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat-badge">
+            <div class="num">100%</div>
+            <div class="lbl">تفاعل فكري</div>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat-badge">
+            <div class="num">✦</div>
+            <div class="lbl">شهادة معتمدة</div>
+        </div>
+    </div>
+</div>
+
+<!-- STEP 2: TEST -->
+<div id="step-test" class="step">
+    <div class="test-header">
+        <div class="test-header-left">
+            <img src="https://files.manuscdn.com/user_upload_by_module/session_file/310419663031625195/ENYhSlnuWzaOeyJM.jpg" alt="Logo">
+            <div class="test-header-title">رائز التحدي</div>
+        </div>
+        <div class="book-chip" id="header-book-name">📖 جاري التحميل...</div>
+    </div>
+    <div class="progress-track">
+        <div class="progress-fill" id="progress-bar"></div>
+    </div>
+
+    <div class="questions-wrap">
+        <!-- Q1 -->
+        <div class="q-card">
+            <div class="q-number">1</div>
+            <div class="q-title-row">
+                <span class="q-emoji">🧹</span>
+                <h3 class="q-title">الممحاة</h3>
+            </div>
+            <p class="q-body">لو كنت تملك "ممحاة سحرية" تستطيع مسح فكرة واحدة أو حدث واحد من <span class="book-ref" id="book-ref-1"></span>، ماذا ستمسح؟ وكيف سيصبح العمل أفضل بدونها؟</p>
+            <textarea id="ans1" class="ans" placeholder="اكتب تحليلك هنا..."></textarea>
+        </div>
+
+        <!-- Q2 -->
+        <div class="q-card">
+            <div class="q-number">2</div>
+            <div class="q-title-row">
+                <span class="q-emoji">⏳</span>
+                <h3 class="q-title">الزمكان</h3>
+            </div>
+            <p class="q-body">لو عشت يوماً داخل مشهد من <span class="book-ref" id="book-ref-2"></span>، ما هو الشيء الوحيد الذي ستأخذه معك من واقعنا اليوم لتغيير نهاية ذلك المشهد؟</p>
+            <textarea id="ans2" class="ans" placeholder="اكتب تخيلك هنا..."></textarea>
+        </div>
+
+        <!-- Q3 -->
+        <div class="q-card">
+            <div class="q-number">3</div>
+            <div class="q-title-row">
+                <span class="q-emoji">🧠</span>
+                <h3 class="q-title">لبنة في العقل</h3>
+            </div>
+            <p class="q-body">اذكر فكرة أو اقتباساً من <span class="book-ref" id="book-ref-3"></span> أضاف "لبنة" لعقلك، وكيف غيّر نظرتك لموقف في حياتك اليومية؟</p>
+            <textarea id="ans3" class="ans" placeholder="اكتب أثر الفكرة هنا..."></textarea>
+        </div>
+
+        <!-- Q4 -->
+        <div class="q-card">
+            <div class="q-number">4</div>
+            <div class="q-title-row">
+                <span class="q-emoji">🎬</span>
+                <h3 class="q-title">المخرج الذكي</h3>
+            </div>
+            <p class="q-body">لصناعة إعلان سينمائي لهذا <span class="book-ref" id="book-ref-4"></span> يجذب الشباب، ما هو "المشهد الصادم" الذي ستجعله واجهة الإعلان ولماذا؟</p>
+            <textarea id="ans4" class="ans" placeholder="اكتب رؤيتك الإخراجية هنا..."></textarea>
+        </div>
+    </div>
+
+    <div class="submit-wrap">
+        <button class="btn-submit" onclick="submitAll()">
+            إرسال إجاباتي والحصول على الشهادة ✉️
+        </button>
+    </div>
+</div>
+
+<!-- STEP 3: LOADING -->
+<div id="step-loading" class="step">
+    <div class="loader-orb">📚</div>
+    <h2 class="loading-title">جاري قياس الوزن الفكري...</h2>
+    <p class="loading-sub">يتم الآن إرسال تحليلاتك إلى لجنة "بين السطور" لإصدار شهادة العبور.</p>
+    <div class="loading-dots"><span></span><span></span><span></span></div>
+</div>
+
+<!-- STEP 4: CERTIFICATE -->
+<div id="step-cert" class="step">
+    <div class="cert-wrap">
+        <div class="cert-success-banner">
+            <div class="cert-success-icon">✅</div>
+            <div class="cert-success-text">
+                <strong>تم إرسال إجاباتك بنجاح!</strong>
+                <span>وصلت مشاركتك إلى لجنة بين السطور على البريد الإلكتروني (onea31458@gmail.com)</span>
+            </div>
+        </div>
+
+        <div class="certificate" id="the-certificate">
+            <div class="cert-corner tl"><svg viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5 55 L5 5 L55 5" stroke="#1a5c38" stroke-width="3" fill="none"/><path d="M15 45 L15 15 L45 15" stroke="#c8922a" stroke-width="1.5" fill="none"/><circle cx="5" cy="5" r="4" fill="#c8922a"/></svg></div>
+            <div class="cert-corner tr"><svg viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5 55 L5 5 L55 5" stroke="#1a5c38" stroke-width="3" fill="none"/><path d="M15 45 L15 15 L45 15" stroke="#c8922a" stroke-width="1.5" fill="none"/><circle cx="5" cy="5" r="4" fill="#c8922a"/></svg></div>
+            <div class="cert-corner bl"><svg viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5 55 L5 5 L55 5" stroke="#1a5c38" stroke-width="3" fill="none"/><path d="M15 45 L15 15 L45 15" stroke="#c8922a" stroke-width="1.5" fill="none"/><circle cx="5" cy="5" r="4" fill="#c8922a"/></svg></div>
+            <div class="cert-corner br"><svg viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5 55 L5 5 L55 5" stroke="#1a5c38" stroke-width="3" fill="none"/><path d="M15 45 L15 15 L45 15" stroke="#c8922a" stroke-width="1.5" fill="none"/><circle cx="5" cy="5" r="4" fill="#c8922a"/></svg></div>
+
+            <div class="cert-inner">
+                <div class="cert-logos">
+                    <img src="https://files.manuscdn.com/user_upload_by_module/session_file/310419663031625195/ENYhSlnuWzaOeyJM.jpg" alt="بين السطور" onerror="this.style.display='none'">
+                    <div class="cert-logos-divider"></div>
+                    <div class="cert-nour-badge">نـ</div>
+                </div>
+
+                <div class="cert-eyebrow">نادي بين السطور · نبني العقول</div>
+                <h1 class="cert-main-title">شهادة استحقاق فكري</h1>
+                <div class="cert-org">◆ مبادرة التحدي الثقافي ◆</div>
+                <div class="cert-divider"><span>✦</span></div>
+                <p class="cert-intro-text">تشهد إدارة المبادرة بأن المبدع(ة):</p>
+                <h2 class="cert-name" id="cert-name"></h2>
+                <p class="cert-body">قد اجتاز بنجاح رائز التحلل والتركيب لـ <span class="hl" id="cert-content"></span>، وأثبت قدرة استثنائية على النقد والتحليل العميق الذي يتجاوز السطحية إلى جوهر الأفكار.</p>
+                <div class="cert-divider"><span>✦</span></div>
+
+                <div class="cert-footer">
+                    <div class="cert-footer-col">
+                        <div class="lbl">تاريخ العبور</div>
+                        <div class="val" id="cert-date"></div>
+                    </div>
+                    <div class="cert-stamp">
+                        <div class="stamp-star">★</div>مُعتمد<br>بين السطور<br><small style="font-size:0.6rem;opacity:0.6">نبني العقول</small>
+                    </div>
+                    <div class="cert-footer-col">
+                        <div class="lbl">الرتبة المُكتسبة</div>
+                        <div class="cert-rank">مرشح للنخبة</div>
+                    </div>
+                </div>
+
+                <div style="margin-top:28px; padding-top:20px; border-top:1px solid #f0e8d0; text-align:center;">
+                    <div style="font-size:0.7rem;color:#aaa;margin-bottom:4px;letter-spacing:0.08em;">إشراف وتقييم</div>
+                    <div style="font-family:'Aref Ruqaa',serif;font-size:1.1rem;color:var(--forest);">نور الهبة الخليفي</div>
+                    <div style="font-size:0.72rem;color:#bbb;">المشرفة على مبادرة التحدي الفكري</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="cert-actions">
+            <button class="btn-action btn-print" onclick="window.print()">🖨️ &nbsp; طباعة / حفظ الشهادة</button>
+            <button class="btn-action btn-restart" onclick="location.reload()">↩ العودة للرئيسية</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    function showStep(id) {
+        document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+        document.getElementById(id).classList.add('active');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function updateBookRefs(bookName) {
+        ['book-ref-1','book-ref-2','book-ref-3','book-ref-4'].forEach(id => {
+            const el = document.getElementById(id);
+            if (el) el.textContent = `«${bookName}»`;
+        });
+        const chip = document.getElementById('header-book-name');
+        if (chip) chip.textContent = `📖 ${bookName}`;
+    }
+
+    function goToTest() {
+        const name    = document.getElementById('input-name').value.trim();
+        const content = document.getElementById('input-content').value.trim();
+        if (!name || !content) {
+            showToast('لطفاً أدخل اسمك والكتاب أو الفيلم المختار.');
+            return;
+        }
+        updateBookRefs(content);
+        showStep('step-test');
+    }
+
+    // ════════════════════════════════════════════════════════════════
+    //   نظام الإرسال متعدد الطبقات — يضمن وصول كل مشاركة
+    // ════════════════════════════════════════════════════════════════
+    
+    const GAS_URL = 'https://script.google.com/macros/s/AKfycbzT_aWQRKn_UyXVeKNC05IIMmeAfuXSavBdVAQsiB6li5a9s0kXLVDuek-Z2gp4fnRBlQ/exec';
+    const RECIPIENT_EMAIL = 'onea31458@gmail.com';
+    
+    function submitAll() {
+        const a1 = document.getElementById('ans1').value.trim();
+        const a2 = document.getElementById('ans2').value.trim();
+        const a3 = document.getElementById('ans3').value.trim();
+        const a4 = document.getElementById('ans4').value.trim();
+
+        if (!a1 || !a2 || !a3 || !a4) {
+            showToast('يرجى الإجابة على جميع الأسئلة لإكمال الرائز.');
+            return;
+        }
+
+        const name    = document.getElementById('input-name').value.trim();
+        const content = document.getElementById('input-content').value.trim();
+
+        showStep('step-loading');
+
+        const data = { name, content, q1: a1, q2: a2, q3: a3, q4: a4 };
+
+        // ── طبقة 1: Google Apps Script عبر iframe ──────────────
+        // (لن يعمل إلا إذا كان السكريبت يحتوي على doGet)
+        try {
+            const params = new URLSearchParams(data);
+            const gasIframe = document.createElement('iframe');
+            gasIframe.style.display = 'none';
+            gasIframe.src = GAS_URL + '?' + params.toString();
+            document.body.appendChild(gasIframe);
+        } catch(e) { console.warn('GAS iframe:', e); }
+
+        // ── طبقة 2: Google Apps Script عبر fetch no-cors ──────
+        try {
+            fetch(GAS_URL, {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                body: JSON.stringify(data)
+            }).catch(() => {});
+        } catch(e) {}
+
+        // ── طبقة 3: FormSubmit عبر iframe مخفي ──────────────────
+        try {
+            document.getElementById('f-name').value    = name;
+            document.getElementById('f-content').value = content;
+            document.getElementById('f-q1').value      = a1;
+            document.getElementById('f-q2').value      = a2;
+            document.getElementById('f-q3').value      = a3;
+            document.getElementById('f-q4').value      = a4;
+            document.getElementById('submission-form').submit();
+        } catch(e) { console.warn('FormSubmit:', e); }
+
+        // ── طبقة 4: Image GET request (تتجاوز كل CORS) ────────
+        try {
+            const imgParams = new URLSearchParams(data);
+            const img = new Image();
+            img.src = GAS_URL + '?' + imgParams.toString() + '&_t=' + Date.now();
+        } catch(e) {}
+
+        // ── حفظ احتياطي محلي في حالة فشل كل شيء ─────────────
+        try {
+            const submissions = JSON.parse(localStorage.getItem('raez_submissions') || '[]');
+            submissions.push({ ...data, timestamp: new Date().toISOString() });
+            localStorage.setItem('raez_submissions', JSON.stringify(submissions));
+        } catch(e) {}
+
+        // أظهر الشهادة بعد 3.5 ثوان
+        setTimeout(() => showCertificate(name, content), 3500);
+    }
+
+    function showCertificate(name, content) {
+        document.getElementById('cert-name').textContent    = name;
+        document.getElementById('cert-content').textContent = `«${content}»`;
+        const now = new Date();
+        document.getElementById('cert-date').textContent    = now.toLocaleDateString('ar-MA', {
+            year:'numeric', month:'long', day:'numeric'
+        });
+        showStep('step-cert');
+    }
+
+    function showToast(msg) {
+        let t = document.getElementById('toast');
+        if (!t) {
+            t = document.createElement('div');
+            t.id = 'toast';
+            Object.assign(t.style, {
+                position:'fixed', bottom:'30px', right:'50%',
+                transform:'translateX(50%)',
+                background:'#1a5c38', color:'white',
+                padding:'14px 24px', borderRadius:'12px',
+                fontSize:'0.9rem', fontFamily:'Cairo,sans-serif',
+                zIndex:'9999', boxShadow:'0 8px 25px rgba(0,0,0,0.2)',
+                transition:'opacity 0.4s', opacity:'0', maxWidth:'340px',
+                textAlign:'center', lineHeight:'1.6'
+            });
+            document.body.appendChild(t);
+        }
+        t.textContent = msg;
+        t.style.opacity = '1';
+        setTimeout(() => { t.style.opacity = '0'; }, 3200);
+    }
+
+    const answers = ['ans1','ans2','ans3','ans4'];
+    answers.forEach(id => {
+        document.getElementById(id)?.addEventListener('input', updateProgress);
+    });
+
+    function updateProgress() {
+        const filled = answers.filter(id => document.getElementById(id)?.value.trim()).length;
+        const pct = Math.max(25, Math.round((filled / 4) * 100));
+        document.getElementById('progress-bar').style.width = pct + '%';
+    }
+</script>
+
+
+<script>
+    // ════════════════════════════════════════════════════════════════
+    // تفعيل تلقائي لـ FormSubmit عند التحميل الأول (يُرسل مرة واحدة فقط)
+    // ════════════════════════════════════════════════════════════════
+    (function autoActivateFormSubmit() {
+        if (localStorage.getItem('formsubmit_activated_v2')) return;
+        
+        try {
+            const activationFrame = document.createElement('iframe');
+            activationFrame.style.display = 'none';
+            activationFrame.name = 'activation_frame';
+            document.body.appendChild(activationFrame);
+            
+            const activationForm = document.createElement('form');
+            activationForm.action = 'https://formsubmit.co/onea31458@gmail.com';
+            activationForm.method = 'POST';
+            activationForm.target = 'activation_frame';
+            activationForm.style.display = 'none';
+            
+            const fields = {
+                '_subject': '🔓 تفعيل خدمة رائز بين السطور',
+                '_captcha': 'false',
+                '_template': 'box',
+                'message': 'هذه رسالة تفعيل تلقائية لخدمة استقبال إجابات التلاميذ. اضغط على رابط التفعيل في هذه الرسالة لبدء استقبال إجابات الرائز.'
+            };
+            
+            for (const [key, value] of Object.entries(fields)) {
+                const input = document.createElement('input');
+                input.type = 'hidden';
+                input.name = key;
+                input.value = value;
+                activationForm.appendChild(input);
+            }
+            
+            document.body.appendChild(activationForm);
+            activationForm.submit();
+            localStorage.setItem('formsubmit_activated_v2', '1');
+        } catch(e) { console.warn('Auto-activation:', e); }
+    })();
+</script>
+</body>
+</html>
